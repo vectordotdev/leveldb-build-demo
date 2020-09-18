@@ -13,7 +13,7 @@ fn main() {
 
   let mut options = Options::new();
   options.create_if_missing = true;
-  let mut database = match Database::open(path, options) {
+  let database = match Database::open(path, options) {
       Ok(db) => { db },
       Err(e) => { panic!("failed to open database: {:?}", e) }
   };
