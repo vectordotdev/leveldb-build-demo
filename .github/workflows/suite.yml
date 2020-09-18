@@ -29,4 +29,4 @@ jobs:
             ~/.cargo/git
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - run: cargo install cross
-      - run: cross build --target ${{ matrix.triple }}
+      - run: cross test --target ${{ matrix.triple }}

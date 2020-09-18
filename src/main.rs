@@ -43,3 +43,8 @@ fn main() {
     Some((1, vec![1]))
   );
 }
+
+#[test]
+fn works() {
+    main()
+}
