@@ -1,0 +1,32 @@
+name: Test Suite
+
+on:
+  push:
+    branches: {}
+    pull_request: {}
+
+env:
+  RUST_LOG: leveldb=trace,leveldb-sys=trace,leveldb-build-demo=trace
+  RUST_TEST_THREADS: 1
+  RUST_BACKTRACE: full
+
+strategy:
+  matrix:
+    triple: [
+      "x86_64-unknown-linux-gnu",
+      "x86_64-unknown-linux-musl",
+    ]
+
+jobs:
+  test-x86_64-unknown-linux-gnu:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - run: cargo install cross
+      - run: cross build --target ${{ matrix.triple }}
