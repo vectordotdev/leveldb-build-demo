@@ -8,13 +8,16 @@ env:
   RUST_BACKTRACE: full
 
 jobs:
-  test-x86_64-unknown-linux-gnu:
+  test:
+    name: Test ${{ matrix.triple }}
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         triple: [
           "x86_64-unknown-linux-gnu",
           "x86_64-unknown-linux-musl",
+          "aarch64-unknown-linux-gnu",
+          "aarch64-unknown-linux-musl",
         ]
     steps:
       - uses: actions/checkout@v2
