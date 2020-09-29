@@ -9,3 +9,6 @@ edition = "2018"
 [dependencies]
 leveldb = "*"
 tempdir = "*"
+
+[patch.crates-io]
+leveldb-sys = { git = "https://github.com/jonas-schievink/leveldb-sys", branch = "musl-stdcxx" }
