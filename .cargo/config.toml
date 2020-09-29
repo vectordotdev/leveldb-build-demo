@@ -1,0 +1,5 @@
+[target.'cfg(target_env = "musl")']
+# For some unknown reason, the `linker` key does not work, so we use `rustflags` instead.
+# NOTE: This means that the `RUSTFLAGS` variable will be *ignored*!
+#linker = "./wrap-ld.sh"
+rustflags = "-Clinker=./wrap-ld.sh"
