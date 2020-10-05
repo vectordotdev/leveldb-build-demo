@@ -5,10 +5,15 @@
 #linker = "./wrap-ld.sh"
 rustflags = "-Clinker=./wrap-ld.sh"
 
-# NOTE: On AArch64, the `cross` Docker image sets both `RUSTFLAGS` and
-# `CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER`, so we cannot easily do the same thing here.
-
 # x86_64-specific libstdc++ search path. When building for musl, Cargo will merge this with the
 # `rustflags` key above.
 [target.'cfg(target_arch = "x86_64")']
 rustflags = "-Lnative=/usr/local/x86_64-linux-musl/lib"
+
+# On AArch64, the `cross` Docker image sets both `RUSTFLAGS` and
+# `CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER`, so we cannot easily pass custom flags.
+# It seems like we have no choice but to use a custom rustc wrapper and do it in bash :(
+
+# Originally I configured that wrapper here, but Cargo does not support relative paths for this
+# (upstream issue: https://github.com/rust-lang/cargo/issues/8202), so instead I'm now using direnv
+# and `.envrc`. This does mean that external setup is needed, but I don't see any way around that.

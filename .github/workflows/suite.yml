@@ -28,5 +28,7 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: cargo install cross
-      - run: cross test --target ${{ matrix.triple }}
+      - run: cargo install --git https://github.com/rust-embedded/cross --rev e88c7b2
+      - run: |
+          source .envrc
+          cross -v test --target ${{ matrix.triple }}
