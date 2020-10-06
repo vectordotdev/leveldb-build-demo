@@ -3,3 +3,6 @@
 # NOTE: This means that the `RUSTFLAGS` variable will be *ignored*!
 #linker = "./wrap-ld.sh"
 rustflags = "-Clinker=./wrap-ld.sh"
+
+[target.'cfg(target_arch = "x86_64")']
+rustflags = "-Lnative=/usr/local/x86_64-linux-musl/lib"
