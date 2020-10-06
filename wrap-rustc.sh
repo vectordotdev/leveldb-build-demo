@@ -17,7 +17,7 @@ set -e
 self=$(dirname "$0")
 
 libstdcxx_path="/usr/local/aarch64-linux-musl/lib"
-linker="$self/wrap-ld.sh"
+linker="$self/wrap-linker.sh"
 
 # We don't get passed the target in any env var, so we'd have to parse cli args and look for the
 # `--target` flag :(
@@ -38,11 +38,8 @@ for arg in "$@"; do
 done
 
 if [[ "$target" == "aarch64-unknown-linux-musl" ]]; then
-    # building for AArch64
-    export RUST_MUSL_LINKER=aarch64-linux-musl-ld
-    export RUST_MUSL_LIBGCC=/usr/local/lib/gcc/aarch64-linux-musl/6.4.0
     # Pass `-Clinker` last to override the previous `-Clinker`.
-    rustc "-Lnative=$libstdcxx_path" "-Lnative=$RUST_MUSL_LIBGCC" "$@" "-Clinker=$linker"
+    rustc "-Lnative=$libstdcxx_path" "$@" "-Clinker=$linker"
 else
     rustc "$@"
 fi

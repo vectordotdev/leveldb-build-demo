@@ -10,14 +10,14 @@
 #
 # Also see this link for compiler docs on which crt objects are used when:
 # https://doc.rust-lang.org/nightly/nightly-rustc/rustc_target/spec/crt_objects/index.html
+#
+# Note that the name of this wrapper is significant: rustc automatically detects the "linker flavor"
+# based on the linker executable name, and if it ends with `-ld` (which used to be the case), it
+# will expect to invoke GNU LD directly. We want to use GCC instead, because it knows the search
+# paths for locating the C++ runtime libraries. GCC is the default "flavor" on musl, so we just have
+# to use a "neutral" wrapper name.
 
 set -o errexit
-
-# The linker to forward to. Must accept GNU LD style arguments (ie. must not be the GCC wrapper).
-linker=${RUST_MUSL_LINKER:-x86_64-linux-musl-ld}
-
-# Location of the objects to inject. These are actually libgcc objects, so use the path to that.
-libgcc=${RUST_MUSL_LIBGCC:-/usr/local/lib/gcc/x86_64-linux-musl/6.4.0}
 
 # Object to inject after the predefined crt start objects.
 inject_begin=${RUST_MUSL_INJECT_BEGIN:-crtbeginS.o}
@@ -28,17 +28,19 @@ inject_end=${RUST_MUSL_INJECT_BEGIN:-crtendS.o}
 # NB: We link the -S version of the objects because Rust produces position-independent executables.
 # The non-S version fails to link in that case.
 
-args=()
-for arg in "$@"; do
-    if [[ "$arg" == *"crti.o"* ]]; then
-        # ctri.0 = last start object
-        args+=("$arg" "$libgcc/$inject_begin")
-    elif [[ "$arg" == *"crtn.o"* ]]; then
-        # ctrn.0 = first end object
-        args+=("$libgcc/$inject_end" "$arg")
-    else
-        args+=("$arg")
-    fi
-done
+# The linker to forward to. Must accept GCC-style arguments (so must not be LD directly).
+linker=''
+if which x86_64-linux-musl-gcc; then
+    linker=x86_64-linux-musl-gcc
+elif which i686-linux-musl-gcc; then
+    linker=i686-linux-musl-gcc
+elif which aarch64-linux-musl-gcc; then
+    linker=aarch64-linux-musl-gcc
+else
+    linker=${RUST_MUSL_LINKER}
+fi
 
+args=("-l:$inject_begin" "$@" "-l:$inject_end")
+
+echo invoking real linker: "$linker" "${args[@]}" >&2
 "$linker" "${args[@]}"
