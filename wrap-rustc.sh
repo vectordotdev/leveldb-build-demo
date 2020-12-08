@@ -39,7 +39,8 @@ done
 
 if [[ "$target" == "aarch64-unknown-linux-musl" ]]; then
     # Pass `-Clinker` last to override the previous `-Clinker`.
-    rustc "-Lnative=$libstdcxx_path" "$@" "-Clinker=$linker"
+    #rustc "-Lnative=$libstdcxx_path" "$@" "-Clinker=$linker"
+    rustc "-Lnative=$libstdcxx_path" "$@" "-Clink-self-contained=no"
 else
     rustc "$@"
 fi

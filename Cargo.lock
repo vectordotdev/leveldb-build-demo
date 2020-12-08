@@ -57,11 +57,12 @@ dependencies = [
 
 [[package]]
 name = "leveldb-sys"
-version = "2.0.7"
-source = "git+https://github.com/jonas-schievink/leveldb-sys?branch=musl-stdcxx#e1d166489cd578d80504f5ed5b3284f8d4410f8d"
+version = "2.0.8"
+source = "git+https://github.com/jonas-schievink/leveldb-sys?branch=linkcpp#090f6cd66f1ab6bdacaf7c2bc0a6f82bb47fec41"
 dependencies = [
  "cmake",
  "libc",
+ "link-cplusplus",
  "num_cpus",
 ]
 
@@ -70,6 +71,14 @@ name = "libc"
 version = "0.2.77"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2f96b10ec2560088a8e76961b00d47107b3a625fecb76dedb29ee7ccbf98235"
+
+[[package]]
+name = "link-cplusplus"
+version = "1.0.3"
+source = "git+https://github.com/jonas-schievink/link-cplusplus?branch=links#4ccfcb895c29e28a0463767edca2d012d5b48cbc"
+dependencies = [
+ "cc",
+]
 
 [[package]]
 name = "num_cpus"

@@ -11,4 +11,5 @@ leveldb = "*"
 tempdir = "*"
 
 [patch.crates-io]
-leveldb-sys = { git = "https://github.com/jonas-schievink/leveldb-sys", branch = "musl-stdcxx" }
+leveldb-sys = { git = "https://github.com/jonas-schievink/leveldb-sys", branch = "linkcpp" }
+#leveldb-sys = { path = "../leveldb-sys" }

@@ -1,22 +1,18 @@
 [target.'cfg(target_env = "musl")']
-# Because the `cross` Docker container sets `CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER`, the
-# `linker` key does not work in this file, so we use `rustflags` instead.
-# NOTE: This means that any custom `RUSTFLAGS` variable must include this value!
-#linker = "./wrap-linker.sh"
-rustflags = "-Clinker=./wrap-linker.sh"
+# Turn off self-contained linking mode. This makes rustc rely on the installed musl toolchain to
+# find and link against C and C++ runtime objects, instead of linking against the bundled C ones.
+# The native toolchain will link the 
+rustflags = "-Clink-self-contained=no"
 
-# x86_64-specific libstdc++ search path. When building for musl, Cargo will merge this with the
-# `rustflags` key above.
-[target.'cfg(target_arch = "x86_64")']
-rustflags = "-Lnative=/usr/local/x86_64-linux-musl/lib"
+# Configure libstdc++ to be statically linked on all musl targets.
+[target.x86_64-unknown-linux-musl.cplusplus]
+rustc-link-lib = ["static=stdc++"]
+rustc-link-search = ["native=/usr/local/x86_64-linux-musl/lib"]
 
-[target.'cfg(target_arch = "x86")']
-rustflags = "-Lnative=/usr/local/i686-linux-musl/lib"
+[target.i686-unknown-linux-musl.cplusplus]
+rustc-link-lib = ["static=stdc++"]
+rustc-link-search = ["native=/usr/local/i686-linux-musl/lib"]
 
-# On AArch64, the `cross` Docker image sets both `RUSTFLAGS` and
-# `CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER`, so we cannot easily pass custom flags.
-# It seems like we have no choice but to use a custom rustc wrapper and do it in bash :(
-
-# Originally I configured that wrapper here, but Cargo does not support relative paths for this
-# (upstream issue: https://github.com/rust-lang/cargo/issues/8202), so instead I'm now using direnv
-# and `.envrc`. This does mean that external setup is needed, but I don't see any way around that.
+[target.aarch64-unknown-linux-musl.cplusplus]
+rustc-link-lib = ["static=stdc++"]
+rustc-link-search = ["native=/usr/local/aarch64-linux-musl/lib"]
