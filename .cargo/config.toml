@@ -1,18 +1,15 @@
 [target.'cfg(target_env = "musl")']
 # Turn off self-contained linking mode. This makes rustc rely on the installed musl toolchain to
 # find and link against C and C++ runtime objects, instead of linking against the bundled C ones.
-# The native toolchain will link the 
 rustflags = "-Clink-self-contained=no"
 
-# Configure libstdc++ to be statically linked on all musl targets.
-[target.x86_64-unknown-linux-musl.cplusplus]
-rustc-link-lib = ["static=stdc++"]
-rustc-link-search = ["native=/usr/local/x86_64-linux-musl/lib"]
+# for these musl targets libstdc++ will be linked statically (that's configured in leveldb-sys)
+# we need to provide the location of that library here
+[target.x86_64-unknown-linux-musl]
+rustflags = "-Lnative=/usr/local/x86_64-linux-musl/lib"
 
-[target.i686-unknown-linux-musl.cplusplus]
-rustc-link-lib = ["static=stdc++"]
-rustc-link-search = ["native=/usr/local/i686-linux-musl/lib"]
+[target.i686-unknown-linux-musl]
+rustflags = "-Lnative=/usr/local/i686-linux-musl/lib"
 
-[target.aarch64-unknown-linux-musl.cplusplus]
-rustc-link-lib = ["static=stdc++"]
-rustc-link-search = ["native=/usr/local/aarch64-linux-musl/lib"]
+[target.aarch64-unknown-linux-musl]
+rustflags = "-Lnative=/usr/local/aarch64-linux-musl/lib"
