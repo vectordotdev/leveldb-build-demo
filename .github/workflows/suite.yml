@@ -32,7 +32,7 @@ jobs:
       # aarch64-musl requires a Docker image that includes rust-embedded/cross#497
       - if: matrix.triple == 'aarch64-unknown-linux-musl'
         run: |
-          git clone --branch pr497+pr498 https://github.com/rust-embedded/cross
+          git clone --branch aarch64-musl-no-rustflags https://github.com/rust-embedded/cross
           cd cross
           ./build-docker-image.sh ${{ matrix.triple }}
           cd ..
