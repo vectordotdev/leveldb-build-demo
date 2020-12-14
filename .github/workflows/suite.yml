@@ -7,7 +7,7 @@ env:
   RUST_TEST_THREADS: 1
   RUST_BACKTRACE: full
 
-jobs:
+ jobs:
   test:
     name: Test ${{ matrix.triple }}
     runs-on: ubuntu-20.04
@@ -28,6 +28,7 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: cargo install --git https://github.com/rust-embedded/cross --rev e88c7b2
+      - run: |
+          curl --retry 3 -sSfL https://japaric.github.io/trust/install.sh | sh -s -- --git japaric/cross --tag v0.2.1
       - run: |
           cross -v test --target ${{ matrix.triple }}
