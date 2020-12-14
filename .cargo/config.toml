@@ -4,7 +4,7 @@
 rustflags = "-Clink-self-contained=no"
 
 # for these musl targets libstdc++ will be linked statically (that's configured in leveldb-sys)
-# we need to provide the location of that library here
+# we provide the location of that library here
 [target.x86_64-unknown-linux-musl]
 rustflags = "-Lnative=/usr/local/x86_64-linux-musl/lib"
 
