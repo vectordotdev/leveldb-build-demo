@@ -28,5 +28,8 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: cargo install cross
-      - run: cross test --target ${{ matrix.triple }}
+      # install pre-built cross binary
+      - run: |
+          curl --retry 3 -sSfL https://japaric.github.io/trust/install.sh | sh -s -- --git japaric/cross --tag v0.2.1
+      - run: |
+          cross -v test --target ${{ matrix.triple }}

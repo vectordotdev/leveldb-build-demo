@@ -1,0 +1,4 @@
+[target.aarch64-unknown-linux-musl]
+# TODO remove this image override when cross v0.2.2 has been released;
+# until then we use the "latest" tag
+image = "rustembedded/cross:aarch64-unknown-linux-musl"
